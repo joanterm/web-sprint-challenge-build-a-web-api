@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
             res.status(200).json(actions)
         })
     .catch(() => {
-         res.status(404).json({message: "actions not found"})
+         res.status(500).json({message: "not found"})
     })
  })
 
