@@ -64,5 +64,23 @@ router.put("/:id", (req, res) => {
     })
 })
 
+//DELETE
+router.delete("/:id", (req, res) => {
+    Projects.get(req.params.id)
+    .then((result) => {
+        if(result == null) {
+            res.status(404).json({message: "project doesn't exist"})
+            return
+        }
+        Projects.remove(req.params.id)
+        .then(() => {
+            res.status(200).json(result)
+        })
+    })
+    .catch(() => {
+        res.status(500).json({message: "not found"})
+    })
+})
+
 
 module.exports = router
