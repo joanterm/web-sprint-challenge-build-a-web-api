@@ -1,4 +1,3 @@
-// add middlewares here related to projects
 const Projects = require("./projects-model")
 
 const validateId = (req, res, next) => {

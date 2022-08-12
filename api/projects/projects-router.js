@@ -4,14 +4,12 @@ const Projects = require("./projects-model")
 const {validateId, validateRequiredFields} = require("./projects-middleware")
 
 //GET
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
    Projects.get()
    .then((result) => {
         res.status(200).json(result)
    }) 
-   .catch(() => {
-        res.status(500).json({message: "not found"})
-   })
+   .catch(next)
 })
 
 //GET BY ID
@@ -20,7 +18,7 @@ router.get("/:id", validateId, (req, res) => {
 })
 
 //POST
-router.post("/", validateRequiredFields, (req, res) => {
+router.post("/", validateRequiredFields, (req, res, next) => {
     Projects.insert(req.validatedRequiredFields)
     .then((item) => {
         return Projects.get(item.id)
@@ -28,13 +26,11 @@ router.post("/", validateRequiredFields, (req, res) => {
     .then((result) => {
         res.status(201).json(result)
     })
-    .catch(() => {
-        res.status(500).json({message: "not found"})
-    })
+    .catch(next)
 })
 
 //PUT
-router.put("/:id", validateId, validateRequiredFields, (req, res) => {
+router.put("/:id", validateId, validateRequiredFields, (req, res, next) => {
     Projects.update(req.params.id, req.validatedRequiredFields)
     .then(() => {
         return Projects.get(req.params.id)
@@ -42,24 +38,20 @@ router.put("/:id", validateId, validateRequiredFields, (req, res) => {
     .then((result) => {
         res.status(201).json(result)
     })
-    .catch(() => {
-        res.status(500).json({message: "not found"})
-    })
+    .catch(next)
 })
 
 //DELETE
-router.delete("/:id", validateId, (req, res) => {
+router.delete("/:id", validateId, (req, res, next) => {
     Projects.remove(req.params.id)
     .then(() => {
         res.status(200).json(req.validatedId)
     })
-    .catch(() => {
-        res.status(500).json({message: "not found"})
-    })
+    .catch(next)
 })
 
 //GET
-router.get("/:id/actions", (req, res) => {
+router.get("/:id/actions", (req, res, next) => {
     Projects.getProjectActions(req.params.id)
     .then((result) => {
         if(result == null) {
@@ -67,9 +59,7 @@ router.get("/:id/actions", (req, res) => {
         } 
         res.status(200).json(result)  
     })
-    .catch(() => {
-        res.status(500).json({message: "not found"})
-    })
+    .catch(next)
 })
 
 
