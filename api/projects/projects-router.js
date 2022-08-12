@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const Projects = require("./projects-model")
+const {validateId} = require("./projects-middleware")
 
 //GET
 router.get("/", (req, res) => {
@@ -14,18 +15,8 @@ router.get("/", (req, res) => {
 })
 
 //GET BY ID
-router.get("/:id", (req, res) => {
-    Projects.get(req.params.id)
-    .then((result) => {
-        if(!result) {
-            res.status(404).json({message: "project doesn't exist"})
-        } else {
-            res.status(200).json(result)
-        }
-    })
-    .catch(() => {
-        res.status(500).json({message: "not found"})
-    })
+router.get("/:id", validateId, (req, res) => {
+    res.status(200).json(req.validatedId)
 })
 
 //POST
