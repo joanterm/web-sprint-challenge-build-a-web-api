@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const Projects = require("./projects-model")
-const {validateId} = require("./projects-middleware")
+const {validateId, validateRequiredFields} = require("./projects-middleware")
 
 //GET
 router.get("/", (req, res) => {
@@ -20,12 +20,8 @@ router.get("/:id", validateId, (req, res) => {
 })
 
 //POST
-router.post("/", (req, res) => {
-    if (typeof req.body.name !== "string" || req.body.name.trim() === "" || typeof req.body.description !== "string" || req.body.description.trim() === "") {
-        res.status(400).json({message: "name and description required"})
-        return
-    }
-    Projects.insert(req.body)
+router.post("/", validateRequiredFields, (req, res) => {
+    Projects.insert(req.validatedRequiredFields)
     .then((item) => {
         return Projects.get(item.id)
     })
@@ -38,7 +34,7 @@ router.post("/", (req, res) => {
 })
 
 //PUT
-router.put("/:id", (req, res) => {
+router.put("/:id", validateId, (req, res) => {
     if (typeof req.body.name !== "string" || req.body.name.trim() === "" || typeof req.body.description !== "string" || req.body.description.trim() === "" || typeof req.body.completed !== "boolean") {
         res.status(400).json({message: "name and description required"})
         return

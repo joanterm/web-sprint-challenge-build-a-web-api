@@ -13,6 +13,16 @@ const validateId = (req, res, next) => {
     })
 }
 
+const validateRequiredFields = (req, res, next) => {
+    if (typeof req.body.name !== "string" || req.body.name.trim() === "" || typeof req.body.description !== "string" || req.body.description.trim() === "" || typeof req.body.completed !== "boolean") {
+        res.status(400).json({message: "name and description required"})
+        return
+    }
+    req.validatedRequiredFields = {name: req.body.name, description: req.body.description, completed: req.body.completed}
+    next()
+}
+
 module.exports = {
-    validateId
+    validateId,
+    validateRequiredFields
 }
