@@ -48,5 +48,21 @@ router.post("/", (req, res) => {
 })
 
 //PUT
+router.put("/:id", (req, res) => {
+    if(typeof req.body.project_id !== "number" || typeof req.body.description !== "string" || req.body.description.trim() === "" || typeof req.body.notes !=="string" || req.body.notes.trim() === "" || typeof req.body.completed !== "boolean") {
+        res.status(400).json({message: "all fields required"})
+        return
+    }
+    Actions.update(req.params.id, req.body)
+    .then(() => {
+        return Actions.get(req.params.id)
+    })
+    .then((result) => {
+        res.status(201).json(result)
+    })
+    .catch(() => {
+        res.status(500).json({message: "not found"})
+    })
+})
 
 module.exports = router
