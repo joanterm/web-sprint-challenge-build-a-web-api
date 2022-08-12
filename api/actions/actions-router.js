@@ -30,6 +30,23 @@ router.get("/:id", (req, res) => {
 })
 
 //POST
+router.post("/", (req, res) => {
+    if(typeof req.body.project_id !== "number" || typeof req.body.description !== "string" || req.body.description.trim() === "" || typeof req.body.notes !=="string" || req.body.notes.trim() === "" || typeof req.body.completed !== "boolean") {
+        res.status(400).json({message: "all fields required"})
+        return
+    }
+    Actions.insert(req.body)
+    .then((item) => {
+        return Actions.get(item.id)
+    })
+    .then((result) => {
+        res.status(201).json(result)
+    })
+    .catch(() => {
+        res.status(500).json({message: "not found"})
+    })
+})
 
+//PUT
 
 module.exports = router
