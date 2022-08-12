@@ -34,12 +34,8 @@ router.post("/", validateRequiredFields, (req, res) => {
 })
 
 //PUT
-router.put("/:id", validateId, (req, res) => {
-    if (typeof req.body.name !== "string" || req.body.name.trim() === "" || typeof req.body.description !== "string" || req.body.description.trim() === "" || typeof req.body.completed !== "boolean") {
-        res.status(400).json({message: "name and description required"})
-        return
-    }
-    Projects.update(req.params.id, req.body)
+router.put("/:id", validateId, validateRequiredFields, (req, res) => {
+    Projects.update(req.params.id, req.validatedRequiredFields)
     .then(() => {
         return Projects.get(req.params.id)
     })
